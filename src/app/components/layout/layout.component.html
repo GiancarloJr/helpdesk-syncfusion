@@ -1,0 +1,25 @@
+<div class="control-container">
+  <ejs-appbar colorMode="Dark">
+    <mat-icon aria-hidden="false" fontIcon="menu" (click)="toggleClick()"></mat-icon>
+    <div class="e-appbar-spacer">Help Desk Angular 15 Com SyncFusion</div>
+  </ejs-appbar>
+</div>
+<ejs-sidebar #dockBar id="dockSidebar" [enableDock]='enableDock' [width]='width' [dockSize]='dockSize'>
+  <div class="dock" [ngClass]="sidebarShow ? 'sidenav-on': 'sidenav-off'">
+
+    <img  class="img" src="assets/img/side-image.svg" alt="Imagem de navegação">
+
+    <mat-list role="list" *ngFor="let item of menuList">
+      <mat-list-item role="listitem">
+        <a class="sidebar-item" [routerLink]="item.Url" routerLinkActive="router-link-active">
+          <i class="material-icons menu">{{ item.matIcon }}</i>
+          <span class="e-text">{{item.nameMenu}}</span>
+        </a>
+      </mat-list-item>
+    </mat-list>
+
+  </div>
+</ejs-sidebar>
+<div id="main-content container-fluid col-md-12 ">
+  <router-outlet></router-outlet>
+</div>
