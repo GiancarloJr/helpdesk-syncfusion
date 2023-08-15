@@ -18,14 +18,11 @@ export abstract class DialogViewBase implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.createForm();
     this.verificandoDataDialog();
     this.dialogRef.disableClose = true;
   }
 
   verificandoDataDialog(): void {
-
-    console.log('test',this.data);
 
     if (this.data.object !== null) {
       this.formData.patchValue(this.data.object);
@@ -46,17 +43,7 @@ export abstract class DialogViewBase implements OnInit {
     }
   }
 
-  createForm(): FormGroup {
-    return this.formData = this._formBuilder.group({
-      id: [''],
-      nome: ['', Validators.minLength(3)],
-      cpf: ['', Validators.required],
-      email: ['', Validators.required],
-      senha: ['', Validators.minLength(3)],
-      perfis: [[]],
-      dataCriacao: ['']
-    })
-  }
+
 
   sendDataToApi(): void {
     switch (this.data.tipo) {
@@ -75,6 +62,7 @@ export abstract class DialogViewBase implements OnInit {
 
       case 'delete':
         this.service.delete(this.data.object.id).subscribe(() => {
+          this.dialogRef.close(true);
           this.router.navigate(['clientes'])
         });
         break;
@@ -94,7 +82,7 @@ export abstract class DialogViewBase implements OnInit {
     }
   }
 
-  addPerfil(perfil: any): void {
+  public addPerfil(perfil: any): void {
 
     if (this.returnPerfis.includes(perfil)) {
       this.returnPerfis.splice(this.formData.get('perfis')?.value.indexOf(perfil), 1);

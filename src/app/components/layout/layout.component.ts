@@ -30,7 +30,7 @@ export class LayoutComponent {
     { matIcon: 'home', nameMenu: 'Home', Url: '' },
     { matIcon: 'person', nameMenu: 'Clientes', Url: 'clientes' },
     { matIcon: 'work', nameMenu: 'Técnicos', Url: 'tecnicos' },
-    { matIcon: 'assignment', nameMenu: 'Chamados', Url: 'home' },
+    { matIcon: 'assignment', nameMenu: 'Chamados', Url: 'chamados' },
     { matIcon: 'login', nameMenu: 'Login', Url: 'login' },
     { matIcon: 'logout', nameMenu: 'Sair' , Url: 'home'}
   ]

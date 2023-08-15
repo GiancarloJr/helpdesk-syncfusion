@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormFieldModel } from 'src/app/models/formField-model/formField-model';
 import { TecnicoService } from 'src/app/services/tecnico.service';
+import { DialogViewBase } from 'src/app/shared/base/dialogviewbase';
 
 @Component({
   selector: 'app-tecnico-cad',
@@ -11,81 +12,21 @@ import { TecnicoService } from 'src/app/services/tecnico.service';
   styleUrls: ['./tecnico-cad.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TecnicoCadComponent implements OnInit {
-
-  formData!: FormGroup;
-  tipoServico: string = 'Cadastrar';
+export class TecnicoCadComponent extends DialogViewBase {
 
   constructor(
-    private service: TecnicoService,
-    private _formBuilder: FormBuilder,
-    private router: Router,
-    public dialogRef: MatDialogRef<TecnicoCadComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+    public override service: TecnicoService,
+    public override _formBuilder: FormBuilder,
+    public override router: Router,
+    public override dialogRef: MatDialogRef<TecnicoCadComponent>,
+    @Inject(MAT_DIALOG_DATA) public override data: any
+  ) {
+    super(service, _formBuilder, router, dialogRef, data)
+  }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     this.createForm();
-    this.verificandoDataDialog();
-    this.dialogRef.disableClose = true;
-  }
-
-  private verificandoDataDialog(): void {
-
-    if (this.data.object !== null) {
-      this.formData.patchValue(this.data.object);
-      this.formData.get('perfis')?.setValue((this.data.object.perfis as Array<string>).map(this.retornaStatus));
-    }
-
-    switch (this.data.tipo) {
-      case 'add':
-        this.tipoServico = 'Adicionar';
-        break;
-      case 'edit':
-        this.tipoServico = 'Alterar';
-        break;
-      case 'delete':
-        this.tipoServico = 'Deletar';
-        this.formData.disable();
-        break;
-    }
-  }
-
-  public sendDataToApi(): void {
-    switch (this.data.tipo) {
-      case 'add':
-        this.service.create(this.formData.getRawValue()).subscribe(() => {
-          this.dialogRef.close(true);
-          this.router.navigate(['tecnicos'])
-        })
-        break;
-      case 'edit':
-        this.service.update(this.formData.getRawValue()).subscribe(() => {
-          this.dialogRef.close(true);
-          this.router.navigate(['tecnicos'])
-        });
-        break;
-
-      case 'delete':
-        this.service.delete(this.data.object.id).subscribe(() => {
-          this.router.navigate(['tecnicos'])
-        });
-        break;
-    }
-  }
-
-  public returnPerfilNumber(n: number): boolean {
-    return this.formData.get('perfis')?.value.includes(n);
-  }
-
-  private retornaStatus(perfil: string): number {
-    if (perfil === 'ADMIN') {
-      return 0
-    } else if (perfil === 'CLIENTE') {
-      return 1
-    } else {
-      return 2
-    }
+    super.ngOnInit();
   }
 
   private createForm(): FormGroup {
@@ -97,19 +38,6 @@ export class TecnicoCadComponent implements OnInit {
       senha: ['', Validators.minLength(3)],
       perfis: [[]]
     })
-  }
-
-  public addPerfil(perfil: any): void {
-
-    if (this.returnPerfis.includes(perfil)) {
-      this.returnPerfis.splice(this.formData.get('perfis')?.value.indexOf(perfil), 1);
-    } else {
-      this.returnPerfis.push(perfil);
-    }
-  }
-
-  private get returnPerfis(): string[] {
-    return this.formData.get('perfis')?.value;
   }
 
   public formFields: FormFieldModel[] = [

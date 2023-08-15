@@ -18,6 +18,10 @@ const routes: Routes = [
       {
         path: 'tecnicos',
         loadChildren: () => import('../app/components/tecnicos-comp/tecnicos-comp.module').then(m => m.TecnicosCompModule)
+      },
+      {
+        path: 'chamados',
+        loadChildren: () => import('../app/components/chamados-comp/chamados-comp.module').then(m => m.ChamadosCompModule)
       }
     ]
   }

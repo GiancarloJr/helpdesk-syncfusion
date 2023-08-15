@@ -10,6 +10,7 @@ import { MatRippleModule } from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import { BrowserModule } from '@angular/platform-browser';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [],
@@ -25,6 +26,7 @@ import { BrowserModule } from '@angular/platform-browser';
     MatInputModule,
     MatButtonModule,
     FormsModule,
+    MatSelectModule
   ],
   exports: [
     MatListModule,
@@ -36,7 +38,8 @@ import { BrowserModule } from '@angular/platform-browser';
     MatRippleModule,
     MatInputModule,
     MatButtonModule,
-    FormsModule
+    FormsModule,
+    MatSelectModule
   ]
 })
 export class MaterialModule { }
