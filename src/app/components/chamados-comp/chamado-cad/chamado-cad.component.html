@@ -55,7 +55,7 @@
     </mat-form-field>
 
     <div class="form-button">
-      <button (click)="create()" [disabled]="!formData.valid" class="fullWidth mat-elevation-z4" mat-flat-button
+      <button (click)="sendDataToApi()" [disabled]="!formData.valid" class="fullWidth mat-elevation-z4" mat-flat-button
         color="primary">{{ tipoServico }}</button>
 
       <button [mat-dialog-close]="true" class="fullWidth mat-elevation-z4" mat-stroked-button

@@ -40,27 +40,7 @@ export class ChamadoCadComponent extends DialogViewBase {
     this.createForm();
     this.findAllClientes();
     this.findAllTecnicos();
-    this.verificandoDataDialog();
-  }
-
-  override verificandoDataDialog(): void {
-    if (this.data.object !== null) {
-      this.formData.patchValue(this.data.object);
-      this.formData.get('status')?.setValue(this.retornaStatusNumber(this.data.object.status));
-      this.formData.get('prioridade')?.setValue(this.retornaStatusNumber(this.data.object.prioridade));
-    }
-
-    switch (this.data.tipo) {
-      case 'add':
-        this.tipoServico = 'Adicionar';
-        break;
-      case 'edit':
-        this.tipoServico = 'Alterar';
-        break;
-      case 'delete':
-        this.tipoServico = 'Deletar';
-        break;
-    }
+    super.ngOnInit();
   }
 
   createForm(): FormGroup {
@@ -77,25 +57,6 @@ export class ChamadoCadComponent extends DialogViewBase {
     })
   }
 
-  create(): void {
-    switch (this.data.tipo) {
-      case 'add':
-        this.chamadoService.create(this.formData.getRawValue()).subscribe(() => {
-          this.dialogRef.close(true);
-          this.router.navigate(['chamados'])
-        });
-        break;
-
-      case 'edit':
-        this.chamadoService.update(this.formData.getRawValue()).subscribe(() => {
-          this.dialogRef.close(true);
-          this.router.navigate(['chamados'])
-
-        });
-        break;
-    }
-  }
-
   findAllClientes(): void {
     this.clienteService.findAll().subscribe(resposta => {
       this.clientes = resposta;
@@ -106,26 +67,6 @@ export class ChamadoCadComponent extends DialogViewBase {
     this.tecnicoService.findAll().subscribe(resposta => {
       this.tecnicos = resposta;
     })
-  }
-
-  retornaStatusNumber(status: string): number {
-    if (status === 'ABERTO') {
-      return 0
-    } else if (status === 'EM ANDAMENTO') {
-      return 1
-    } else {
-      return 2
-    }
-  }
-
-  retornaPrioridadeNumber(prioridade: string): number {
-    if (prioridade === 'BAIXO') {
-      return 0
-    } else if (prioridade === 'MEDIO') {
-      return 1
-    } else {
-      return 2
-    }
   }
 
 }

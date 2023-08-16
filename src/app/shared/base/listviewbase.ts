@@ -88,25 +88,5 @@ export abstract class ListViewBase implements AfterViewInit, OnInit {
 
   @ViewChild(ListBaseComponent) listComponent!: ListBaseComponent;
 
-  private retornaStatusNome(status: number): string {
-    if (status === 0) {
-      return 'ABERTO'
-    } else if (status === 1) {
-      return 'EM ANDAMENTO'
-    } else {
-      return 'ENCERRADO'
-    }
-  }
-
-  private retornaPrioridadeNome(prioridade: number): string {
-    if (prioridade === 0) {
-      return 'BAIXO'
-    } else if (prioridade === 1) {
-      return 'MEDIO'
-    } else {
-      return 'ALTA'
-    }
-  }
-
 }
 

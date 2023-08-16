@@ -1,6 +1,5 @@
-import { Directive, Inject, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Directive, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 
 @Directive()
@@ -22,11 +21,14 @@ export abstract class DialogViewBase implements OnInit {
     this.dialogRef.disableClose = true;
   }
 
-  verificandoDataDialog(): void {
-
+  protected verificandoDataDialog(): void {
     if (this.data.object !== null) {
       this.formData.patchValue(this.data.object);
-      this.formData.get('perfis')?.setValue((this.data.object.perfis as Array<string>).map(this.retornaStatus));
+
+      if (this.data.object.prioridade && this.data.object.status) {
+        this.formData.get('prioridade')?.setValue(this.retornaPrioridade(this.data.object.prioridade));
+        this.formData.get('status')?.setValue(this.retornaStatus(this.data.object.status));
+      }
     }
 
     switch (this.data.tipo) {
@@ -38,12 +40,9 @@ export abstract class DialogViewBase implements OnInit {
         break;
       case 'delete':
         this.tipoServico = 'Deletar';
-        this.formData.disable();
         break;
     }
   }
-
-
 
   sendDataToApi(): void {
     switch (this.data.tipo) {
@@ -72,14 +71,32 @@ export abstract class DialogViewBase implements OnInit {
     return this.formData.get('perfis')?.value.includes(n);
   }
 
-  retornaStatus(perfil: string): number {
-    if (perfil === 'ADMIN') {
-      return 0
-    } else if (perfil === 'CLIENTE') {
-      return 1
-    } else {
-      return 2
+  protected retornaPrioridade(prioridade: string | number): string | number {
+
+    let prioridadeStatus: { [key: string | number]: string | number } = {
+      'BAIXO': 0,
+      'MÉDIA': 1,
+      'ALTA': 2,
+      0: 'BAIXO',
+      1: 'MÉDIA',
+      2: 'ALTA'
     }
+
+    return prioridadeStatus[prioridade];
+  }
+
+  protected retornaStatus(perfil: string | number): string | number {
+
+    let status: { [key: string | number]: string | number } = {
+      'ABERTO': 0,
+      'EM ANDAMENTO': 1,
+      'ENCERRADO': 2,
+      0: 'ABERTO',
+      1: 'EM ANDAMENTO',
+      2: 'ENCERRADO'
+    }
+
+    return status[perfil];
   }
 
   public addPerfil(perfil: any): void {
