@@ -1,7 +1,12 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { AsyncValidatorFn } from '@angular/forms';
+import { ValidationErrors } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Cliente } from 'src/app/models/cliente';
 import { FormFieldModel } from 'src/app/models/formField-model/formField-model';
 import { ClienteService } from 'src/app/services/cliente.service';
@@ -34,7 +39,7 @@ export class ClienteCadComponent extends DialogViewBase {
       id: [''],
       nome: ['', Validators.minLength(3)],
       cpf: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required]],
       senha: ['', Validators.minLength(3)],
       perfis: [[]],
       dataCriacao: ['']
@@ -47,5 +52,26 @@ export class ClienteCadComponent extends DialogViewBase {
     { label: 'Email', formControlName: 'email', placeHolder: 'Email', matIcon: 'email', typeField: 'text' },
     { label: 'Senha', formControlName: 'senha', placeHolder: 'Senha', matIcon: 'password', typeField: 'password' },
   ]
+
+
+
+  // createValidator(userService: ClienteService): AsyncValidatorFn {
+  //   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      
+  //     let a: Cliente= userService.findByEmail(control.value.email);
+
+  //     return userService
+  //     .findByEmail(control.value)
+  //       .pipe(
+  //         distinctUntilChanged(),
+  //         debounceTime(400),
+  //         map((result: Cliente) =>            
+  //           result.id !== this.formData.value.id ? { usernameAlreadyExists: true } : null
+  //         )
+  //       );
+  //   };
+  // }
+  
+
 
 }
