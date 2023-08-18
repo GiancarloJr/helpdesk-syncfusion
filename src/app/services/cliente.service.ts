@@ -15,6 +15,10 @@ export class ClienteService {
     return this.http.get<Cliente>(`${API_CONFIG.baseUrl}/clientes/${id}`);
   }
 
+  findByEmail(email: any): Observable<Cliente> {
+    return this.http.get<Cliente>(`${API_CONFIG.baseUrl}/clientes/email/${email}`);
+  }
+
   findAll(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${API_CONFIG.baseUrl}/clientes`);
   }

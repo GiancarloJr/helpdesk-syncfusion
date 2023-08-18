@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
 import { Tecnico } from '../models/tecnico';
@@ -13,6 +13,10 @@ export class TecnicoService {
 
   findById(id: any): Observable<Tecnico> {
     return this.http.get<Tecnico>(`${API_CONFIG.baseUrl}/tecnicos/${id}`);
+  }
+
+  findByEmail(email: any): Observable<Tecnico> {
+    return this.http.get<Tecnico>(`${API_CONFIG.baseUrl}/tecnicos/email/${email}`);
   }
 
   findAll(): Observable<Tecnico[]> {

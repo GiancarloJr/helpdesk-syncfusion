@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   logar() {
     this.service.login(this.formLogin.value).subscribe((resposta) => {
 
-      this.service.successfulLogin(resposta.headers.get('Authorization')!.substring(7));
+      // this.service.successfulLogin(resposta.headers.get('Authorization')!.substring(7));
       this.router.navigate(['clientes'])
     })
   }

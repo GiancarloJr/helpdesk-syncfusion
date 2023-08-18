@@ -1,9 +1,11 @@
 import { Directive, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors } from "@angular/forms";
 import { Router } from "@angular/router";
+import { Observable, debounceTime, distinctUntilChanged, map } from "rxjs";
+import { UtilsHelp } from "./utils/utils";
 
 @Directive()
-export abstract class DialogViewBase implements OnInit {
+export abstract class DialogViewBase implements OnInit{
 
   formData!: FormGroup;
   tipoServico: string = 'Cadastrar';
@@ -16,6 +18,7 @@ export abstract class DialogViewBase implements OnInit {
     public data: any
   ) { }
 
+
   ngOnInit(): void {
     this.verificandoDataDialog();
     this.dialogRef.disableClose = true;
@@ -25,9 +28,8 @@ export abstract class DialogViewBase implements OnInit {
     if (this.data.object !== null) {
       this.formData.patchValue(this.data.object);
 
-      if (this.data.object.prioridade && this.data.object.status) {
-        this.formData.get('prioridade')?.setValue(this.retornaPrioridade(this.data.object.prioridade));
-        this.formData.get('status')?.setValue(this.retornaStatus(this.data.object.status));
+      if (this.data.object.perfis) {
+        this.formData.get('perfis')?.setValue((this.data.object.perfis as Array<string>).map(UtilsHelp.retornaPerfil));
       }
     }
 
@@ -47,56 +49,35 @@ export abstract class DialogViewBase implements OnInit {
   sendDataToApi(): void {
     switch (this.data.tipo) {
       case 'add':
+
+        if (this.data.object.perfis) {
+          this.convertPerfisToNumber(this.formData.get('perfis')?.value);
+        }
+
         this.service.create(this.formData.getRawValue()).subscribe(() => {
           this.dialogRef.close(true);
-          this.router.navigate(['clientes'])
         })
         break;
       case 'edit':
-        this.service.update(this.formData.getRawValue()).subscribe(() => {
+
+        if (this.data.object.perfis) {
+          this.convertPerfisToNumber(this.formData.get('perfis')?.value);
+        }
+
+        this.service.update(this.formData.getRawValue()).subscribe((result: any) => {
           this.dialogRef.close(true);
-          this.router.navigate(['clientes'])
         });
         break;
 
       case 'delete':
         this.service.delete(this.data.object.id).subscribe(() => {
           this.dialogRef.close(true);
-          this.router.navigate(['clientes'])
         });
         break;
     }
   }
   returnPerfilNumber(n: number): boolean {
     return this.formData.get('perfis')?.value.includes(n);
-  }
-
-  protected retornaPrioridade(prioridade: string | number): string | number {
-
-    let prioridadeStatus: { [key: string | number]: string | number } = {
-      'BAIXO': 0,
-      'MÉDIA': 1,
-      'ALTA': 2,
-      0: 'BAIXO',
-      1: 'MÉDIA',
-      2: 'ALTA'
-    }
-
-    return prioridadeStatus[prioridade];
-  }
-
-  protected retornaStatus(perfil: string | number): string | number {
-
-    let status: { [key: string | number]: string | number } = {
-      'ABERTO': 0,
-      'EM ANDAMENTO': 1,
-      'ENCERRADO': 2,
-      0: 'ABERTO',
-      1: 'EM ANDAMENTO',
-      2: 'ENCERRADO'
-    }
-
-    return status[perfil];
   }
 
   public addPerfil(perfil: any): void {
@@ -106,10 +87,35 @@ export abstract class DialogViewBase implements OnInit {
     } else {
       this.returnPerfis.push(perfil);
     }
+
   }
 
   private get returnPerfis(): string[] {
     return this.formData.get('perfis')?.value;
   }
 
+  private convertPerfisToNumber(perfis: string[]): any[] {
+    return perfis.map(UtilsHelp.retornaPerfil);
+
+
+  }
+
+  protected createValidator(userService: any): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return userService
+        .findByEmail(control.value)
+        .pipe(
+          distinctUntilChanged(),
+          debounceTime(400),
+          map((result: any) => {
+            if (this.data.tipo === 'edit') {
+              return result.id !== this.data.object.id ? { usernameAlreadyExists: true } : null;
+            }
+            return result ? { usernameAlreadyExists: true } : null;
+          }
+          )
+        )
+    };
+  }
 }
+

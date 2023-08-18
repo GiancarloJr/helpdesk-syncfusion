@@ -16,34 +16,22 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-
-
   login(creds: Credenciais): Observable<any> {
     return this.http.post<HttpResponse<any>>(`${API_CONFIG.baseUrl}/login`, creds,
-    { observe: 'response' });
+      {
+        observe: 'response',
+      }).pipe(
+        map(response => {
+          sessionStorage.setItem('token', response.headers.get('Authorization')!.substring(7));
+        })
+      );
   }
-  sair() {
-
-  }
-
-  estaLogado() {
-
-  }
-
-  obterUsuario() {
-
-  }
-
 
   authenticate(creds: Credenciais) {
     return this.http.post(`${API_CONFIG.baseUrl}/login`, creds, {
       observe: 'response',
       responseType: 'text'
     })
-  }
-
-  successfulLogin(authToken: string) {
-    localStorage.setItem('token', authToken);
   }
 
   isAuthenticated() {

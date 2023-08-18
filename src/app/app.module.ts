@@ -6,9 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from './components/layout/layout.module';
-import { SyncfusionModule } from './shared/syncfusion/syncfusion.module';
 import { MaterialModule } from './shared/material/material.module';
-import { ChamadosCompComponent } from './components/chamados-comp/chamados-comp.component';
+import { SyncfusionModule } from './shared/syncfusion/syncfusion.module';
 
 
 @NgModule({

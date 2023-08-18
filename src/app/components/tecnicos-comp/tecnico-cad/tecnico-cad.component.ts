@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable, distinctUntilChanged, debounceTime, map } from 'rxjs';
 import { FormFieldModel } from 'src/app/models/formField-model/formField-model';
+import { Tecnico } from 'src/app/models/tecnico';
 import { TecnicoService } from 'src/app/services/tecnico.service';
 import { DialogViewBase } from 'src/app/shared/base/dialogviewbase';
 
@@ -19,7 +21,7 @@ export class TecnicoCadComponent extends DialogViewBase {
     public override _formBuilder: FormBuilder,
     public override router: Router,
     public override dialogRef: MatDialogRef<TecnicoCadComponent>,
-    @Inject(MAT_DIALOG_DATA) public override data: any
+    @Inject(MAT_DIALOG_DATA) public override data: Tecnico
   ) {
     super(service, _formBuilder, router, dialogRef, data)
   }
@@ -34,7 +36,7 @@ export class TecnicoCadComponent extends DialogViewBase {
       id: [''],
       nome: ['', Validators.minLength(3)],
       cpf: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required], [this.createValidator(this.service)]],
       senha: ['', Validators.minLength(3)],
       perfis: [[]]
     })
@@ -46,5 +48,7 @@ export class TecnicoCadComponent extends DialogViewBase {
     { label: 'Email', formControlName: 'email', placeHolder: 'Email', matIcon: 'email', typeField: 'text' },
     { label: 'Senha', formControlName: 'senha', placeHolder: 'Senha', matIcon: 'password', typeField: 'password' },
   ]
+
+
 }
 

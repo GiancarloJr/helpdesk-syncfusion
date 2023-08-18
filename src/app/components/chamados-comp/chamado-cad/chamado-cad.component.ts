@@ -3,12 +3,14 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { Cliente } from 'src/app/models/cliente';
 import { Tecnico } from 'src/app/models/tecnico';
 import { ChamadoService } from 'src/app/services/chamado.service';
 import { ClienteService } from 'src/app/services/cliente.service';
 import { TecnicoService } from 'src/app/services/tecnico.service';
 import { DialogViewBase } from 'src/app/shared/base/dialogviewbase';
+import { UtilsHelp } from 'src/app/shared/base/utils/utils';
 
 @Component({
   selector: 'chamado-cad',
@@ -20,6 +22,9 @@ export class ChamadoCadComponent extends DialogViewBase {
 
   clientes: Cliente[] = [];
   tecnicos: Tecnico[] = [];
+
+  request1 = this.clienteService.findAll();
+  request2 = this.tecnicoService.findAll();
 
   constructor(
     private chamadoService: ChamadoService,
@@ -38,9 +43,16 @@ export class ChamadoCadComponent extends DialogViewBase {
 
   override ngOnInit(): void {
     this.createForm();
-    this.findAllClientes();
-    this.findAllTecnicos();
+    this.findAll();
     super.ngOnInit();
+  }
+
+  protected override verificandoDataDialog(): void {
+    super.verificandoDataDialog();
+    if (this.data.object.prioridade && this.data.object.status) {
+      this.formData.get('prioridade')?.setValue(UtilsHelp.retornaPrioridade(this.data.object.prioridade));
+      this.formData.get('status')?.setValue(UtilsHelp.retornaStatus(this.data.object.status));
+    }
   }
 
   createForm(): FormGroup {
@@ -57,16 +69,14 @@ export class ChamadoCadComponent extends DialogViewBase {
     })
   }
 
-  findAllClientes(): void {
-    this.clienteService.findAll().subscribe(resposta => {
-      this.clientes = resposta;
-    })
-  }
+  findAll(): void {
+    const clientes$ = this.clienteService.findAll()
+    const tecnicos$ = this.tecnicoService.findAll()
 
-  findAllTecnicos(): void {
-    this.tecnicoService.findAll().subscribe(resposta => {
-      this.tecnicos = resposta;
-    })
+    forkJoin([clientes$, tecnicos$]).subscribe(resposta => {
+      this.clientes = resposta[0];
+      this.tecnicos = resposta[1];
+    });
   }
 
 }

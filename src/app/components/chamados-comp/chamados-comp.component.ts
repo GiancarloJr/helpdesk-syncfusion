@@ -22,15 +22,11 @@ export class ChamadosCompComponent extends ListViewBase {
 
   override initializeData(): void {
     this.service.findAll().subscribe((resposta: any) => {
-      console.log(resposta);
-
       this.dataSource = resposta;
       this.dataSource.map((x: any) => x.prioridade = this.retornaPrioridade(x.prioridade))
       this.dataSource.map((x: any) => x.status = this.retornaStatus(x.status))
     });
   }
-
-
 
   public columns: ColumnModel[] = [
     { field: 'id', headerText: 'ID', textAlign: 'Center', width: '5%', allowFiltering: false, isPrimaryKey: true },

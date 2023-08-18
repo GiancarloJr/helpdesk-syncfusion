@@ -1,12 +1,7 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { AsyncValidatorFn } from '@angular/forms';
-import { ValidationErrors } from '@angular/forms';
-import { AbstractControl } from '@angular/forms';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Cliente } from 'src/app/models/cliente';
 import { FormFieldModel } from 'src/app/models/formField-model/formField-model';
 import { ClienteService } from 'src/app/services/cliente.service';
@@ -25,13 +20,15 @@ export class ClienteCadComponent extends DialogViewBase {
     public override _formBuilder: FormBuilder,
     public override router: Router,
     public override dialogRef: MatDialogRef<ClienteCadComponent>,
-    @Inject(MAT_DIALOG_DATA) public override data: any) {
+    @Inject(MAT_DIALOG_DATA) public override data: Cliente) {
     super(service, _formBuilder, router, dialogRef, data)
   }
 
   override ngOnInit(): void {
     this.createForm();
     super.ngOnInit();
+    console.log(this.data);
+
   }
 
   createForm(): FormGroup {
@@ -39,7 +36,7 @@ export class ClienteCadComponent extends DialogViewBase {
       id: [''],
       nome: ['', Validators.minLength(3)],
       cpf: ['', Validators.required],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required], [this.createValidator(this.service)]],
       senha: ['', Validators.minLength(3)],
       perfis: [[]],
       dataCriacao: ['']
@@ -51,27 +48,5 @@ export class ClienteCadComponent extends DialogViewBase {
     { label: 'CPF', formControlName: 'cpf', placeHolder: 'CPF', matIcon: 'pin', typeField: 'text' },
     { label: 'Email', formControlName: 'email', placeHolder: 'Email', matIcon: 'email', typeField: 'text' },
     { label: 'Senha', formControlName: 'senha', placeHolder: 'Senha', matIcon: 'password', typeField: 'password' },
-  ]
-
-
-
-  // createValidator(userService: ClienteService): AsyncValidatorFn {
-  //   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-      
-  //     let a: Cliente= userService.findByEmail(control.value.email);
-
-  //     return userService
-  //     .findByEmail(control.value)
-  //       .pipe(
-  //         distinctUntilChanged(),
-  //         debounceTime(400),
-  //         map((result: Cliente) =>            
-  //           result.id !== this.formData.value.id ? { usernameAlreadyExists: true } : null
-  //         )
-  //       );
-  //   };
-  // }
-  
-
-
+  ];
 }
