@@ -1,17 +1,19 @@
 import { ComponentType } from "@angular/cdk/portal";
-import { AfterViewInit, ChangeDetectorRef, Directive, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Directive, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ListBaseComponent } from "../components-base/list-base/list-base.component";
 import { ContextMenuItem } from "@syncfusion/ej2-angular-grids";
+import { Subject, takeUntil } from "rxjs";
 
 @Directive()
-export abstract class ListViewBase implements AfterViewInit, OnInit {
+export abstract class ListViewBase implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(protected dialog: MatDialog,
     protected service: any,
     protected _cdr: ChangeDetectorRef,
     protected dialogComponente: ComponentType<any>) {
   }
+
 
   public dataSource!: any;
 
@@ -30,22 +32,30 @@ export abstract class ListViewBase implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
 
     this.listComponent.addSubject
-      .subscribe(() =>
+      .pipe(
+        takeUntil(this.unsubscriberAdd)
+      ).subscribe(() =>
         this.addNew()
       );
 
     this.listComponent.editSubject
-      .subscribe(() =>
+    .pipe(
+      takeUntil(this.unsubscriberEdit)
+    ).subscribe(() =>
         this.edit()
       );
 
     this.listComponent.deleteSubject
-      .subscribe(() =>
+    .pipe(
+      takeUntil(this.unsubscriberDelete)
+    ).subscribe(() =>
         this.delete()
       );
 
     this.listComponent.exportPdfSubject
-      .subscribe(() =>
+    .pipe(
+      takeUntil(this.unsubscriberExportPDF)
+    ).subscribe(() =>
         this.exportPdf()
       );
   }
@@ -55,12 +65,10 @@ export abstract class ListViewBase implements AfterViewInit, OnInit {
   }
 
   private edit(): void {
-
     this.openDialog('edit', this.dialogComponente);
   }
 
   private delete(): void {
-
     this.openDialog('delete', this.dialogComponente);
   }
 
@@ -84,6 +92,25 @@ export abstract class ListViewBase implements AfterViewInit, OnInit {
         this.initializeData();
       });
     }
+  }
+
+  private unsubscriberAdd = new Subject<void>();
+  private unsubscriberEdit = new Subject<void>();
+  private unsubscriberDelete = new Subject<void>();
+  private unsubscriberExportPDF = new Subject<void>();
+
+  ngOnDestroy(): void {
+    this.unsubscriberAdd.next();
+    this.unsubscriberAdd.complete();
+
+    this.unsubscriberEdit.next();
+    this.unsubscriberEdit.complete();
+
+    this.unsubscriberDelete.next();
+    this.unsubscriberDelete.complete();
+
+    this.unsubscriberExportPDF.next();
+    this.unsubscriberExportPDF.complete();
   }
 
   @ViewChild(ListBaseComponent) listComponent!: ListBaseComponent;
