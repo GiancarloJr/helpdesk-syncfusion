@@ -1,14 +1,17 @@
 import { Directive, OnInit } from "@angular/core";
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Observable, debounceTime, distinctUntilChanged, map } from "rxjs";
+import { Observable, Subject, debounceTime, distinctUntilChanged, map, of } from "rxjs";
 import { UtilsHelp } from "./utils/utils";
+import { Tecnico } from "src/app/models/tecnico";
+import { Cliente } from "src/app/models/cliente";
 
 @Directive()
-export abstract class DialogViewBase implements OnInit{
+export abstract class DialogViewBase implements OnInit {
 
   formData!: FormGroup;
   tipoServico: string = 'Cadastrar';
+  userTest!: Cliente | Tecnico;
 
   constructor(
     protected service: any,
@@ -41,12 +44,13 @@ export abstract class DialogViewBase implements OnInit{
         this.tipoServico = 'Alterar';
         break;
       case 'delete':
+        this.formData.disable();
         this.tipoServico = 'Deletar';
         break;
     }
   }
 
-  sendDataToApi(): void {
+  public sendDataToApi(): void {
     switch (this.data.tipo) {
       case 'add':
 
@@ -76,18 +80,17 @@ export abstract class DialogViewBase implements OnInit{
         break;
     }
   }
+
   returnPerfilNumber(n: number): boolean {
     return this.formData.get('perfis')?.value.includes(n);
   }
 
   public addPerfil(perfil: any): void {
-
     if (this.returnPerfis.includes(perfil)) {
       this.returnPerfis.splice(this.formData.get('perfis')?.value.indexOf(perfil), 1);
     } else {
       this.returnPerfis.push(perfil);
     }
-
   }
 
   private get returnPerfis(): string[] {
@@ -96,8 +99,6 @@ export abstract class DialogViewBase implements OnInit{
 
   private convertPerfisToNumber(perfis: string[]): any[] {
     return perfis.map(UtilsHelp.retornaPerfil);
-
-
   }
 
   protected createValidator(userService: any): AsyncValidatorFn {
@@ -108,7 +109,7 @@ export abstract class DialogViewBase implements OnInit{
           distinctUntilChanged(),
           debounceTime(400),
           map((result: any) => {
-            if (this.data.tipo === 'edit') {
+            if (this.data.tipo === 'edit' || this.data.tipo === 'delete') {
               return result.id !== this.data.object.id ? { usernameAlreadyExists: true } : null;
             }
             return result ? { usernameAlreadyExists: true } : null;

@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { LayoutModule } from './components/layout/layout.module';
 import { MaterialModule } from './shared/material/material.module';
 import { SyncfusionModule } from './shared/syncfusion/syncfusion.module';
+import { AuthInterceptorProvider } from './interceptors/auth.interceptor';
 
 
 @NgModule({
@@ -25,7 +26,9 @@ import { SyncfusionModule } from './shared/syncfusion/syncfusion.module';
     HttpClientModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [
+    AuthInterceptorProvider
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

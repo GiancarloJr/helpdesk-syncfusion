@@ -36,7 +36,7 @@ export class TecnicoCadComponent extends DialogViewBase {
       id: [''],
       nome: ['', Validators.minLength(3)],
       cpf: ['', Validators.required],
-      email: ['', [Validators.required], [this.createValidator(this.service)]],
+      email: ['', [Validators.required],[this.createValidator(this.service)]],
       senha: ['', Validators.minLength(3)],
       perfis: [[]]
     })

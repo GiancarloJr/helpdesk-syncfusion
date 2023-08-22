@@ -20,7 +20,7 @@ export class TecnicosCompComponent extends ListViewBase {
   }
 
   public columns: ColumnModel[] = [
-    { field: 'id', headerText: 'ID', textAlign: 'Center', width: '10%', allowFiltering: true, isPrimaryKey: true },
+    { field: 'id', headerText: 'ID', textAlign: 'Center', width: '10%', allowFiltering: false, isPrimaryKey: true },
     { field: 'nome', headerText: 'Título', textAlign: 'Center', width: '30%', allowFiltering: true },
     { field: 'cpf', headerText: 'Cliente', textAlign: 'Center', width: '30%' },
     { field: 'email', headerText: 'Email', textAlign: 'Center', width: '30%' }

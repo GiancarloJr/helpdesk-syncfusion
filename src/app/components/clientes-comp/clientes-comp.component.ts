@@ -21,7 +21,7 @@ export class ClientesCompComponent extends ListViewBase {
   }
 
   public columns: ColumnModel[] = [
-    { field: 'id', headerText: 'ID', textAlign: 'Center', width: '5%', allowFiltering: true, isPrimaryKey: true },
+    { field: 'id', headerText: 'ID', textAlign: 'Center', width: '5%', allowFiltering: false, isPrimaryKey: true },
     { field: 'nome', headerText: 'Título', textAlign: 'Center', width: '15%', allowFiltering: true },
     { field: 'cpf', headerText: 'Cliente', textAlign: 'Center', width: '15%' },
     { field: 'email', headerText: 'Email', textAlign: 'Center', width: '15%' },

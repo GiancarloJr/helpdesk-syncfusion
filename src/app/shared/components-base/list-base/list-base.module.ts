@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ListBaseComponent } from './list-base.component';
 import { SyncfusionModule } from '../../syncfusion/syncfusion.module';
 import { MaterialModule } from '../../material/material.module';
+import { AuthInterceptorProvider } from 'src/app/interceptors/auth.interceptor';
 
 
 

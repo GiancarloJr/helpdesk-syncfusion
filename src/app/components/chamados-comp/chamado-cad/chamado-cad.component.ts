@@ -70,10 +70,12 @@ export class ChamadoCadComponent extends DialogViewBase {
   }
 
   findAll(): void {
-    const clientes$ = this.clienteService.findAll()
-    const tecnicos$ = this.tecnicoService.findAll()
+    const clientes$ = this.clienteService.findAll();
+    const tecnicos$ = this.tecnicoService.findAll();
 
     forkJoin([clientes$, tecnicos$]).subscribe(resposta => {
+      console.log(resposta);
+
       this.clientes = resposta[0];
       this.tecnicos = resposta[1];
     });

@@ -5,6 +5,7 @@ import { ChamadoService } from 'src/app/services/chamado.service';
 import { ListViewBase } from 'src/app/shared/base/listviewbase';
 import { ChamadoCadComponent } from './chamado-cad/chamado-cad.component';
 import { Chamado } from 'src/app/models/chamado';
+import { UtilsHelp } from 'src/app/shared/base/utils/utils';
 
 @Component({
   selector: 'app-chamados-comp',
@@ -23,13 +24,13 @@ export class ChamadosCompComponent extends ListViewBase {
   override initializeData(): void {
     this.service.findAll().subscribe((resposta: any) => {
       this.dataSource = resposta;
-      this.dataSource.map((x: any) => x.prioridade = this.retornaPrioridade(x.prioridade))
-      this.dataSource.map((x: any) => x.status = this.retornaStatus(x.status))
+      this.dataSource.map((x: any) => x.prioridade = UtilsHelp.retornaPrioridade(x.prioridade))
+      this.dataSource.map((x: any) => x.status = UtilsHelp.retornaStatus(x.status))
     });
   }
 
   public columns: ColumnModel[] = [
-    { field: 'id', headerText: 'ID', textAlign: 'Center', width: '5%', allowFiltering: false, isPrimaryKey: true },
+    { field: 'id', headerText: 'ID', textAlign: 'Center', width: '5%', allowFiltering: false, isPrimaryKey: true, visible: false },
     { field: 'titulo', headerText: 'Título', textAlign: 'Center', width: '8%', allowFiltering: true },
     { field: 'nomeCliente', headerText: 'Cliente', textAlign: 'Center', width: '8%' },
     { field: 'nomeTecnico', headerText: 'Técnico', textAlign: 'Center', width: '8%' },

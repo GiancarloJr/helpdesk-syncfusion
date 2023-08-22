@@ -34,8 +34,8 @@ export class AuthService {
     })
   }
 
-  isAuthenticated() {
-    let token = localStorage.getItem('token')
+  isAuthenticated(): boolean {
+    let token = sessionStorage.getItem('token');
     if (token != null) {
       return !this.jwtService.isTokenExpired(token)
     }
@@ -43,6 +43,6 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.clear();
+    sessionStorage.removeItem('token');
   }
 }

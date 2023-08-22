@@ -26,9 +26,8 @@ export class ClienteCadComponent extends DialogViewBase {
 
   override ngOnInit(): void {
     this.createForm();
+    this.formData.touched;
     super.ngOnInit();
-    console.log(this.data);
-
   }
 
   createForm(): FormGroup {

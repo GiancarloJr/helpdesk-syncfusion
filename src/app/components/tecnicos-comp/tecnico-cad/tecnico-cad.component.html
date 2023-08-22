@@ -20,7 +20,7 @@
         <mat-label>{{ item.label }}</mat-label>
         <div class="formfield-flex">
           <input [name]="item.formControlName" [formControlName]="item.formControlName" required matInput
-            [placeholder]="item.placeHolder" [type]="item.typeField == 'password' ? 'password' : ''" axlength="50">
+            [placeholder]="item.placeHolder" [type]="item.typeField == 'password' ? 'password' : ''" maxlength="50">
           <mat-icon>sentiment_very_satisfied</mat-icon>
         </div>
       </mat-form-field>

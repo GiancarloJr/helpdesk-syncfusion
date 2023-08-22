@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { isAdminGuard } from './auth/auth.guard';
 import { LayoutComponent } from './components/layout/layout.component';
 
 const routes: Routes = [
+
+  { path: 'login', loadChildren: () => import('../app/components/login/login.module').then(m => m.LoginModule)},
   {
-    path: '',
-    component: LayoutComponent,
+    path: '', component: LayoutComponent, canActivate: [isAdminGuard],
     children: [
-      {
-        path: 'login',
-        loadChildren: () => import('../app/components/login/login.module').then(m => m.LoginModule)
-      },
       {
         path: 'clientes',
         loadChildren: () => import('../app/components/clientes-comp/clientes-comp.module').then(m => m.ClientesCompModule)

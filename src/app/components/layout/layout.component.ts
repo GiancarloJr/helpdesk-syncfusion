@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
@@ -11,7 +12,8 @@ import { MenuModel } from 'src/app/models/menu-model/menu';
 })
 export class LayoutComponent {
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+    private authService: AuthService) {
 
   }
 
@@ -31,11 +33,18 @@ export class LayoutComponent {
     { matIcon: 'person', nameMenu: 'Clientes', Url: 'clientes' },
     { matIcon: 'work', nameMenu: 'Técnicos', Url: 'tecnicos' },
     { matIcon: 'assignment', nameMenu: 'Chamados', Url: 'chamados' },
-    { matIcon: 'login', nameMenu: 'Login', Url: 'login' },
-    { matIcon: 'logout', nameMenu: 'Sair' , Url: 'home'}
+    { matIcon: 'logout', nameMenu: 'Sair' , Url: 'login'}
   ]
 
   redirect(item: MenuModel): void {
+    if(item.nameMenu == 'Sair'){
+      this.authService.logout();
+      this.router.navigate([item.Url]);
+      return;
+    }
     this.router.navigate([item.Url]);
+
   }
+
+
 }
