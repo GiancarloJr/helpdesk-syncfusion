@@ -81,6 +81,33 @@ export abstract class DialogViewBase implements OnInit {
     }
   }
 
+  protected createValidator(userService: any): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return userService
+        .findByEmail(control.value)
+        .pipe(
+          distinctUntilChanged(),
+          debounceTime(400),
+          map((result: any) => {
+            if (this.data.tipo === 'edit' || this.data.tipo === 'delete') {
+              console.log('entrou aqui');
+
+              console.log(result.id != this.data.object.id ? { usernameAlreadyExists: true } : null );
+              console.log(this.formData.valid);
+
+
+              return result.id != this.data.object.id ? { usernameAlreadyExists: true } : null ;
+            }
+
+            console.log('aqui');
+
+            return result ? { usernameAlreadyExists: true } : null ;
+          }
+          )
+        )
+    };
+  }
+
   returnPerfilNumber(n: number): boolean {
     return this.formData.get('perfis')?.value.includes(n);
   }
@@ -99,24 +126,6 @@ export abstract class DialogViewBase implements OnInit {
 
   private convertPerfisToNumber(perfis: string[]): any[] {
     return perfis.map(UtilsHelp.retornaPerfil);
-  }
-
-  protected createValidator(userService: any): AsyncValidatorFn {
-    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-      return userService
-        .findByEmail(control.value)
-        .pipe(
-          distinctUntilChanged(),
-          debounceTime(400),
-          map((result: any) => {
-            if (this.data.tipo === 'edit' || this.data.tipo === 'delete') {
-              return result.id !== this.data.object.id ? { usernameAlreadyExists: true } : null;
-            }
-            return result ? { usernameAlreadyExists: true } : null;
-          }
-          )
-        )
-    };
   }
 }
 

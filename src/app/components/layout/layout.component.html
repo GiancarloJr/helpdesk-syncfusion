@@ -2,6 +2,10 @@
   <ejs-appbar colorMode="Dark">
     <mat-icon aria-hidden="false" fontIcon="menu" (click)="toggleClick()"></mat-icon>
     <div class="e-appbar-spacer">Help Desk Angular 15 Com SyncFusion</div>
+    <a class="sidebar-item logout" (click)="redirect({ matIcon: 'logout', nameMenu: 'Sair', Url: 'login' })" routerLinkActive="router-link-active">
+      <i class="material-icons menu">logout</i>
+      <span class="e-text">Sair</span>
+    </a>
   </ejs-appbar>
 </div>
 <ejs-sidebar #dockBar id="dockSidebar" [enableDock]='enableDock' [width]='width' [dockSize]='dockSize'>
@@ -11,7 +15,7 @@
 
     <mat-list role="list" *ngFor="let item of menuList">
       <mat-list-item role="listitem">
-        <a class="sidebar-item" [routerLink]="item.Url" routerLinkActive="router-link-active">
+        <a class="sidebar-item" (click)="redirect(item)" routerLinkActive="router-link-active">
           <i class="material-icons menu">{{ item.matIcon }}</i>
           <span class="e-text">{{item.nameMenu}}</span>
         </a>

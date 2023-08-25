@@ -42,7 +42,7 @@ export class AuthService {
     return false
   }
 
-  logout() {
-    sessionStorage.removeItem('token');
+  public logout(): void {
+    sessionStorage.clear();
   }
 }

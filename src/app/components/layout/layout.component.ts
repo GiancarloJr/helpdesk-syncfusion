@@ -1,5 +1,5 @@
 import { AuthService } from './../../services/auth.service';
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
 import { MenuModel } from 'src/app/models/menu-model/menu';
@@ -8,6 +8,9 @@ import { MenuModel } from 'src/app/models/menu-model/menu';
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  animations: [
+
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class LayoutComponent {
@@ -25,21 +28,19 @@ export class LayoutComponent {
 
   toggleClick() {
     this.dockBar?.toggle();
-    this.sidebarShow = !this.sidebarShow;
   }
 
   menuList: MenuModel[] = [
     { matIcon: 'home', nameMenu: 'Home', Url: '' },
     { matIcon: 'person', nameMenu: 'Clientes', Url: 'clientes' },
     { matIcon: 'work', nameMenu: 'Técnicos', Url: 'tecnicos' },
-    { matIcon: 'assignment', nameMenu: 'Chamados', Url: 'chamados' },
-    { matIcon: 'logout', nameMenu: 'Sair' , Url: 'login'}
+    { matIcon: 'assignment', nameMenu: 'Chamados', Url: 'chamados' }
   ]
 
   redirect(item: MenuModel): void {
-    if(item.nameMenu == 'Sair'){
+    if (item.nameMenu === 'Sair') {
       this.authService.logout();
-      this.router.navigate([item.Url]);
+      this.router.navigate(['login']);
       return;
     }
     this.router.navigate([item.Url]);
