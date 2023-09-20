@@ -90,18 +90,9 @@ export abstract class DialogViewBase implements OnInit {
           debounceTime(400),
           map((result: any) => {
             if (this.data.tipo === 'edit' || this.data.tipo === 'delete') {
-              console.log('entrou aqui');
-
-              console.log(result.id != this.data.object.id ? { usernameAlreadyExists: true } : null );
-              console.log(this.formData.valid);
-
-
-              return result.id != this.data.object.id ? { usernameAlreadyExists: true } : null ;
+              return result.id != this.data.object.id ? { usernameAlreadyExists: true } : null;
             }
-
-            console.log('aqui');
-
-            return result ? { usernameAlreadyExists: true } : null ;
+            return result ? { usernameAlreadyExists: true } : null;
           }
           )
         )
